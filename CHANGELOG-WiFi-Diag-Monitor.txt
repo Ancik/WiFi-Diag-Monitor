@@ -1,0 +1,12 @@
+v1.5.6-netsh-regex-fallback
+- Added regex-based netsh fallback parser.
+- Parser remains ASCII-only to avoid mojibake/parser issues in Windows PowerShell 5.1.
+- Added wildcard matching for Polish labels with diacritics without embedding non-ASCII characters in source.
+- DataSource is now NetshRegexFallback when the fallback parser succeeds.
+- Native WLAN API Access Denied / missing SSID/BSSID no longer prevents netsh fallback attempts.
+
+v1.5.5
+- Native WLAN API access fallback logic.
+
+v1.5.4
+- Stable ASCII source rebuild.

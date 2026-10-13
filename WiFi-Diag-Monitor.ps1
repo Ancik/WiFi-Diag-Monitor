@@ -603,7 +603,8 @@ function Get-NetshValueRegex {
     if ([string]::IsNullOrWhiteSpace($Text)) { return $null }
 
     foreach ($labelPattern in $LabelPatterns) {
-        $pattern = "(?im)^\s*(?:$labelPattern)\s*:\s*(.*?)\s*$"
+        # An empty value must not consume the next line's label.
+        $pattern = "(?im)^[ \t]*(?:$labelPattern)[ \t]*:[ \t]*([^\r\n]*?)[ \t]*\r?$"
         $match = [regex]::Match($Text, $pattern)
         if ($match.Success) {
             $value = $match.Groups[1].Value.Trim()
@@ -1320,7 +1321,8 @@ while ((Get-Date) -lt $endTime) {
         $wifiDataSource = $wlan.DataSource
         $wifiDetectionStatus = $wlan.DetectionStatus
         if (-not [string]::IsNullOrWhiteSpace($ssid) -and -not [string]::IsNullOrWhiteSpace($bssid)) { $wifiConnected = $true }
-        elseif ($state -match 'Connected') { $wifiConnected = $true }
+        # Match the complete English or Polish state, including when metadata is unavailable.
+        elseif ($state -match '^(?:Connected|Po\u0142\u0105czono)$') { $wifiConnected = $true }
     }
 
     $ipInfo = Get-IpInfoForInterface -InterfaceAlias $interfaceName
